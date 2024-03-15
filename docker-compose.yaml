@@ -1,0 +1,14 @@
+version: "3.7"
+
+name: some_store_django
+services:
+  main_database:
+    image: postgres:16.1-alpine
+    command: -p 8001
+    container_name: main_database
+    expose:
+      - 8001
+    env_file:
+      - Some_Store/.env
+    ports:
+      - "10001:8001"
