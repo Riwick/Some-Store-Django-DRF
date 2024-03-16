@@ -1,3 +1,4 @@
 .idea
 venv
 Some_Store/.env
+errors.log
