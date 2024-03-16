@@ -1,5 +1,4 @@
 from django.shortcuts import HttpResponse
-from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 
 from .custom_permissions import IsSuperUserOrStaffOrReadOnly

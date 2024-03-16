@@ -4,11 +4,11 @@ name: some_store_django
 services:
   main_database:
     image: postgres:16.1-alpine
-    command: -p 8001
+    command: -p 8002
     container_name: main_database
     expose:
-      - 8001
+      - 8002
     env_file:
       - Some_Store/.env
     ports:
-      - "10001:8001"
+      - "10002:8002"
