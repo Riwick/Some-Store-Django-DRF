@@ -1,12 +1,18 @@
 from django.shortcuts import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
+from djoser.compat import get_user_email
+from djoser.views import UserViewSet
+from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from .custom_permissions import IsSuperUserOrStaffOrReadOnly
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
+from .tasks import send_reset_password_email
 
 DEFAULT_PAGE_SIZE = 10
 
@@ -22,7 +28,7 @@ class Paginator(PageNumberPagination):
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all().select_related('category_id', 'author_id')
+    queryset = Product.objects.all().select_related('category_id', 'author_id').order_by('id')
     serializer_class = ProductSerializer
     permission_classes = [IsSuperUserOrStaffOrReadOnly]
     pagination_class = Paginator
@@ -32,7 +38,7 @@ class ProductViewSet(ModelViewSet):
 
 
 class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('id')
     serializer_class = CategorySerializer
     permission_classes = [IsSuperUserOrStaffOrReadOnly]
     pagination_class = Paginator
