@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -245,12 +246,12 @@ LOGGING = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:10003/0",
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
     }
 }
 
-CELERY_BROKER_URL = 'redis://localhost:10003/1'
+CELERY_BROKER_URL = 'redis://redis:6379/1'
 

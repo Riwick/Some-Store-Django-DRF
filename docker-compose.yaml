@@ -13,9 +13,53 @@ services:
     ports:
       - "10002:8002"
 
+  some_store:
+    build:
+      context: .
+    ports:
+      - "10000:8000"
+    volumes:
+      - ./Some_Store:/Some_Store
+    env_file:
+      - Some_Store/.env
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - redis
+      - main_database
+
   redis:
     image: redis:7.2.4-alpine
     container_name: main_redis
     hostname: redis
+
+  celery_worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=INFO
+    volumes:
+      - ./Some_Store:/Some_Store
+    depends_on:
+      - redis
+      - main_database
+      - some_store
+    env_file:
+      - Some_Store/.env
+
+  celery_flower:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app flower
     ports:
-      - "10003:6379"
+      - "10001:5555"
+    volumes:
+      - ./Some_Store:/Some_Store
+    depends_on:
+      - redis
+      - main_database
+      - some_store
+    env_file:
+      - Some_Store/.env
