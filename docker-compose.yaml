@@ -31,35 +31,5 @@ services:
     image: redis:7.2.4-alpine
     container_name: main_redis
     hostname: redis
-
-  celery_worker:
-    build:
-      context: .
-    hostname: worker
-    entrypoint: celery
-    command: -A celery_app.app worker --loglevel=INFO
-    volumes:
-      - ./Some_Store:/Some_Store
     depends_on:
-      - redis
       - main_database
-      - some_store
-    env_file:
-      - Some_Store/.env
-
-  celery_flower:
-    build:
-      context: .
-    hostname: worker
-    entrypoint: celery
-    command: -A celery_app.app flower
-    ports:
-      - "10001:5555"
-    volumes:
-      - ./Some_Store:/Some_Store
-    depends_on:
-      - redis
-      - main_database
-      - some_store
-    env_file:
-      - Some_Store/.env
